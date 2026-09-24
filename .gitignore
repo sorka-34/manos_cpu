@@ -1,0 +1,9 @@
+runs/
+*.vvp
+*.vcd
+*.fst
+.vscode/
+*.swp
+.DS_Store
+*.log
+*.lef.bak
