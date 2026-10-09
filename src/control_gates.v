@@ -74,7 +74,7 @@ module control_gates (
     // Clear E
     assign e_ctrl[3] = D[7]&~I&T[3]&IR[10];
     // Load into E 
-    assign e_ctrl[2] = D[0]&I&T[3]&IR[8] | D[7]&~I&T[3]&IR[7] | D[7]&~I&T[3]&IR[6];
+    assign e_ctrl[2] = D[0]&I&T[3]&(IR[8]|IR[7]|IR[6]|IR[5]) | D[7]&~I&T[3]&IR[7] | D[7]&~I&T[3]&IR[6];
     // Set E
     assign e_ctrl[1] = 1'b0;
     // Invert E
@@ -141,8 +141,8 @@ module control_gates (
             D[0]&I&T[3]&IR[10]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b01010;
             D[0]&I&T[3]&IR[9]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b01100;
             D[0]&I&T[3]&IR[8]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b00010;
-            D[0]&I&T[3]&IR[7]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b00011;
-            D[0]&I&T[3]&IR[6]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b00100;
+            D[0]&I&T[3]&IR[7]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = {4'b0001, E}; // ADDC
+            D[0]&I&T[3]&IR[6]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = {4'b0010, E}; // SUBB
             D[0]&I&T[3]&IR[5]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b00101;
             D[0]&I&T[3]&IR[4]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b00110;
             D[7]&I&T[3]&IR[11]: {OP_S3, OP_S2, OP_S1, OP_S0, Cin} = 5'b00111;
