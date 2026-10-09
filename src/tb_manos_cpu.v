@@ -30,9 +30,6 @@ module tb_manos_cpu ();
         assign T = dut.cu.T;
         assign inpr_out = dut.dp.register_bank.inpr_out;
 
-        fgi_set = 1'b0;
-        fgo_set = 1'b0;
-
         inpr_in = $random;
 
         clk = 1'b0;
@@ -74,14 +71,14 @@ module tb_manos_cpu ();
         memory[27] = 16'h7010; // SPA
         memory[28] = 16'h7008; // SNA
         memory[29] = 16'h7001; // HLT (skipped)
-        memory[30] = 16'h7080; // CIR
-        memory[31] = 16'h7008; // SNA
-        memory[32] = 16'h7400; // CLE
-        memory[33] = 16'h7002; // SZE
-        memory[34] = 16'h7001; // HLT (skipped)
-        memory[35] = 16'h7100; // CME
-        memory[36] = 16'h7002; // SZE
-        memory[37] = 16'h7040; // CIL
+        memory[30] = 16'h7040; // CIL
+        memory[31] = 16'h7400; // CLE
+        memory[32] = 16'h7002; // SZE
+        memory[33] = 16'h7001; // HLT (skipped)
+        memory[34] = 16'h7080; // CIR
+        memory[35] = 16'h7008; // SNA
+        memory[36] = 16'h7100; // CME
+        memory[37] = 16'h7002; // SZE
         memory[38] = 16'h1039; // LDD
         memory[39] = 16'hA03A; // LDA Indirect
         memory[40] = 16'h8100; // ADD
@@ -134,7 +131,7 @@ module tb_manos_cpu ();
         memory[87] = 16'h8040; // SUBB
         memory[88] = 16'h8020; // SUB
         memory[89] = 16'h8010; // DEC
-        memory[90] = 16'hC056; // BUN
+        memory[90] = 16'hC056; // BUN Indirect
         memory[91] = 16'h0000;
         memory[92] = 16'h0000;
         memory[93] = 16'h0000;
@@ -146,27 +143,27 @@ module tb_manos_cpu ();
 
     always @(posedge clk) begin
         if (mem_ld) memory[AR] <= mem_out;
-        if (AR == 49) begin
-            fgi_set = 1'b1;
-            fgo_set = 1'b1;
-            #10;
-            fgi_set = 1'b0;
-            fgo_set = 1'b0;
-        end
-
-        if (AR == 51) begin
-            fgi_set = 1'b1;
-            fgo_set = 1'b1;
-            #10;
-            fgi_set = 1'b0;
-            fgo_set = 1'b0;
-        end
-
         if (S == 0) begin
+            $display("STA Locations: memory[59] = %b\n memory[74] = %b\n", memory[59], memory[74]);
             $finish;
         end
 
-        $display(" AR = %d\n AC = %b\n IR = %b\n DR = %b\n D = %b\n T = %b\n FGI = %b\n FGO = %b", AR, AC, IR, DR, D, T, FGI, FGO);
+        $display(" AR = %d, AC = %b\n DR = %b, T = %b\n", AR, AC, DR, T);
+    end
+
+    always @(posedge clk ) begin
+        fgi_set <= 1'b0;
+        fgo_set <= 1'b0;
+
+        if (AR == 49 && T == 2) begin
+            fgi_set <= 1'b1;
+            fgo_set <= 1'b1;
+        end
+
+        if (AR == 51 && T == 2) begin
+            fgi_set <= 1'b1;
+            fgo_set <= 1'b1;
+        end
     end
 
 endmodule
