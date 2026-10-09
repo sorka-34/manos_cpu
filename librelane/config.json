@@ -1,0 +1,6 @@
+{
+	"DESIGN_NAME": "manos_cpu",
+	"VERILOG_FILES": "dir::../src/*.v",
+	"CLOCK_PORT": "clk",
+	"CLOCK_PERIOD": 32
+}
